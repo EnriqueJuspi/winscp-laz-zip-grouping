@@ -1,32 +1,47 @@
 import json
 import subprocess
 
-# ===== LOAD CONFIG =====
-with open("sftp_config.json", "r") as f:
-    config = json.load(f)
+# Load SFTP configuration from JSON file
+def load_config(config_file="sftp_config.json"):
+    with open(config_file, "r") as f:
+        return json.load(f)
 
-host = config["host"]
-username = config["username"]
-password = config["password"]
-remote_path = config["remote_path"]
+# Execute WinSCP command and return output
+def execute_winscp(commands):
+    result = subprocess.run(
+        ["winscp.com"],
+        input=commands,
+        capture_output=True,
+        text=True
+    )
 
-# ===== BUILD COMMANDS =====
-commands = f"""
-open sftp://{username}:{password}@{host}
-cd "{remote_path}"
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr)
+
+    return result.stdout
+
+# Connect to SFTP and list target folder files
+def get_folder_listing(config):
+    commands = f"""
+open sftp://{config['username']}:{config['password']}@{config['host']}
+cd "{config['remote_path']}"
 pwd
 ls
 exit
 """
 
-print("STEP 1 - GET FILE LIST")
-result = subprocess.run(
-    ["winscp.com"],
-    input=commands,
-    capture_output=True,
-    text=True
-)
+    return execute_winscp(commands)
 
-output = result.stdout
+# Entry point
+def main():
+    config = load_config()
 
-print(output)
+    print("STEP 1 - GET FILE LIST")
+
+    output = get_folder_listing(config)
+
+    print(output)
+
+
+if __name__ == "__main__":
+    main()
