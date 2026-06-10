@@ -1,0 +1,6 @@
+{
+    "host": "<SFTP_HOST>",
+    "username": "<SFTP_USERNAME>",
+    "password": "<SFTP_PASSWORD>",
+    "remote_path": "<REMOTE_PATH>"
+}
