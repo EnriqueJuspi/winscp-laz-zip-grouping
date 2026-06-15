@@ -134,16 +134,14 @@ def move_all_pairs(config, pairs, las_exists):
         result = execute_winscp(script)
 
         print(
-            f"{timestamp()} | BATCH |  END  | "
-            f"total = {len(pairs)} pairs"
+            f"{timestamp()} | BATCH |  END"
         )
 
         return result
 
     except Exception:
         print(
-            f"{timestamp()} | BATCH |  END  | "
-            f"total = {len(pairs)} pairs"
+            f"{timestamp()} | BATCH |  END"
         )
         raise
 
@@ -183,8 +181,6 @@ def main():
     print("=" * 50)
 
     move_all_pairs(config, pairs, las_exists)
-
-    print("DONE - All paired files moved into folders")
     
 if __name__ == "__main__":
     main()
